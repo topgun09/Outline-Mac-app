@@ -1,0 +1,247 @@
+<!DOCTYPE html><!--
+@license
+Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><script>'use strict';
+
+WCT = {
+  waitFor: function waitFor(cb) {
+    addEventListener('DOMContentLoaded', cb);
+  }
+};</script>
+<script src="test-flags.js"></script>
+<script src="../node_modules/wct-browser-legacy/browser.js"></script>
+<script src="../node_modules/@webcomponents/webcomponents-platform/webcomponents-platform.js"></script>
+<script src="../node_modules/es6-promise/dist/es6-promise.auto.min.js"></script>
+<script src="../node_modules/@webcomponents/template/template.js"></script>
+<script src="../node_modules/@webcomponents/html-imports/html-imports.min.js"></script>
+<script src="../node_modules/@webcomponents/shadydom/shadydom.min.js"></script>
+<script src="../node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>
+<script src="../scoping-shim.min.js"></script>
+<script src="../apply-shim.min.js"></script>
+<script src="../custom-style-interface.min.js"></script>
+<template id="eager-host">
+  <style>
+    :host {
+      display: block;
+      height: 100px;
+      background-color: blue;
+    }
+
+    :host > late-client {
+      --foo: rgb(255, 0, 0);
+    }
+  </style>
+  <late-client></late-client>
+</template>
+<template id="late-client">
+  <style>
+    :host {
+      display: block;
+      color: var(--foo);
+    }
+
+    div {
+      border: 2px solid rgb(0, 255, 0);
+      border-color: var(--foo);
+    }
+  </style>
+  <div>Hello!</div>
+</template>
+
+<template id="x-parent">
+  <style>
+    :host {
+      --property: 10px solid black;
+    }
+  </style>
+  <x-child></x-child>
+</template>
+<template id="x-child">
+  <style>
+    div {
+      border: var(--property);
+    }
+  </style>
+  <div></div>
+</template>
+
+<script>'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LateClient = function (_HTMLElement) {
+  _inherits(LateClient, _HTMLElement);
+
+  function LateClient() {
+    _classCallCheck(this, LateClient);
+
+    var _this = _possibleConstructorReturn(this, (LateClient.__proto__ || Object.getPrototypeOf(LateClient)).call(this));
+
+    _this.initialized = false;
+    _this.attachShadow({ mode: 'open' });
+    return _this;
+  }
+
+  _createClass(LateClient, [{
+    key: 'init',
+    value: function init() {
+      if (this.initialized) {
+        return;
+      }
+      this.initialized = true;
+      var template = document.querySelector('template#' + this.localName);
+      if (!template.initialized) {
+        template.initialized = true;
+        window.ShadyCSS.prepareTemplate(template, this.localName);
+      }
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      window.ShadyCSS.styleElement(this);
+    }
+  }, {
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      if (this.initialized) {
+        window.ShadyCSS.styleElement(this);
+      }
+    }
+  }]);
+
+  return LateClient;
+}(HTMLElement);
+
+var EagerHost = function (_HTMLElement2) {
+  _inherits(EagerHost, _HTMLElement2);
+
+  function EagerHost() {
+    _classCallCheck(this, EagerHost);
+
+    var _this2 = _possibleConstructorReturn(this, (EagerHost.__proto__ || Object.getPrototypeOf(EagerHost)).call(this));
+
+    _this2.template = document.querySelector('template#' + _this2.localName);
+    if (!_this2.template.initialized) {
+      _this2.template.initialized = true;
+      window.ShadyCSS.prepareTemplate(_this2.template, _this2.localName);
+    }
+    return _this2;
+  }
+
+  _createClass(EagerHost, [{
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      window.ShadyCSS.styleElement(this);
+      if (this.template && !this.shadowRoot) {
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.appendChild(this.template.content.cloneNode(true));
+      }
+    }
+  }]);
+
+  return EagerHost;
+}(HTMLElement);
+
+var StampBeforeStyle = function (_HTMLElement3) {
+  _inherits(StampBeforeStyle, _HTMLElement3);
+
+  function StampBeforeStyle() {
+    _classCallCheck(this, StampBeforeStyle);
+
+    var _this3 = _possibleConstructorReturn(this, (StampBeforeStyle.__proto__ || Object.getPrototypeOf(StampBeforeStyle)).call(this));
+
+    _this3.template = document.querySelector('template#' + _this3.localName);
+    if (!_this3.template.initialized) {
+      _this3.template.initialized = true;
+      window.ShadyCSS.prepareTemplate(_this3.template, _this3.localName);
+    }
+    return _this3;
+  }
+
+  _createClass(StampBeforeStyle, [{
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      if (this.template && !this.shadowRoot) {
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.appendChild(this.template.content.cloneNode(true));
+      }
+      window.ShadyCSS.styleElement(this);
+    }
+  }]);
+
+  return StampBeforeStyle;
+}(HTMLElement);
+
+suite('Lazy Initialization', function () {
+  test('Late child element is eventually correct', function () {
+    customElements.define('late-client', function (_LateClient) {
+      _inherits(_class, _LateClient);
+
+      function _class() {
+        _classCallCheck(this, _class);
+
+        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+      }
+
+      return _class;
+    }(LateClient));
+    customElements.define('eager-host', function (_EagerHost) {
+      _inherits(_class2, _EagerHost);
+
+      function _class2() {
+        _classCallCheck(this, _class2);
+
+        return _possibleConstructorReturn(this, (_class2.__proto__ || Object.getPrototypeOf(_class2)).apply(this, arguments));
+      }
+
+      return _class2;
+    }(EagerHost));
+    var host = document.createElement('eager-host');
+    document.body.appendChild(host);
+    window.ShadyCSS.styleDocument();
+    var inner = host.shadowRoot.querySelector('late-client');
+    if (inner.init) {
+      inner.init();
+    }
+    var div = inner.shadowRoot.querySelector('div');
+    assert.equal(getComputedStyle(div).getPropertyValue('border-color').trim(), 'rgb(255, 0, 0)');
+  });
+
+  test('Custom Property Shim can force unprepared parent to evaluate', function () {
+    customElements.define('x-child', function (_StampBeforeStyle) {
+      _inherits(_class3, _StampBeforeStyle);
+
+      function _class3() {
+        _classCallCheck(this, _class3);
+
+        return _possibleConstructorReturn(this, (_class3.__proto__ || Object.getPrototypeOf(_class3)).apply(this, arguments));
+      }
+
+      return _class3;
+    }(StampBeforeStyle));
+    customElements.define('x-parent', function (_StampBeforeStyle2) {
+      _inherits(_class4, _StampBeforeStyle2);
+
+      function _class4() {
+        _classCallCheck(this, _class4);
+
+        return _possibleConstructorReturn(this, (_class4.__proto__ || Object.getPrototypeOf(_class4)).apply(this, arguments));
+      }
+
+      return _class4;
+    }(StampBeforeStyle));
+    var host = document.createElement('x-parent');
+    document.body.appendChild(host);
+    var inner = host.shadowRoot.querySelector('x-child');
+    var div = inner.shadowRoot.querySelector('div');
+    assert.equal(getComputedStyle(div).getPropertyValue('border-top-width').trim(), '10px');
+  });
+});</script>

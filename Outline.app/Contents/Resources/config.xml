@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget android-versionCode="23" id="org.outline.android.client" version="1.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <feature name="LocalStorage">
+        <param name="osx-package" value="CDVLocalStorage" />
+    </feature>
+    <feature name="OutlinePlugin">
+        <param name="ios-package" value="OutlinePlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="Device">
+        <param name="ios-package" value="CDVDevice" />
+    </feature>
+    <feature name="Clipboard">
+        <param name="ios-package" value="CDVClipboard" />
+    </feature>
+    <name>Outline</name>
+    <description>
+        Internet without borders (powered by Shadowsocks)
+    </description>
+    <content src="cordova_index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <sentry>
+        <dev dsn="https://319145c481df41458bb6e84c1a99c9ff@sentry.io/159503" />
+        <release dsn="https://6a1e6e7371a64db59f5ba6c34a77d78c@sentry.io/159502" />
+        <dev-native dsn="https://319145c481df41458bb6e84c1a99c9ff:73cc3261d25e44ac90221e7d9ad30b24@sentry.io/159503" />
+        <release-native dsn="https://6a1e6e7371a64db59f5ba6c34a77d78c:568f6c78f9f94f91afba4aba05756001@sentry.io/159502" />
+    </sentry>
+    <icon height="16" src="resources/icons/osx/icon-16.png" width="16" />
+    <icon height="32" src="resources/icons/osx/icon-32.png" width="32" />
+    <icon height="64" src="resources/icons/osx/icon-64.png" width="64" />
+    <icon height="128" src="resources/icons/osx/icon-128.png" width="128" />
+    <icon height="256" src="resources/icons/osx/icon-256.png" width="256" />
+    <icon height="512" src="resources/icons/osx/icon-512.png" width="512" />
+    <icon height="1024" src="resources/icons/osx/icon-1024.png" width="1024" />
+    <preference name="AllowInlineMediaPlayback" value="true" />
+    <preference name="AllowWebViewNavigation" value="false" />
+    <preference name="BackupWebStorage" value="cloud" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="EnableViewportScale" value="false" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="android-minSdkVersion" value="21" />
+    <preference name="android-targetSdkVersion" value="28" />
+    <preference name="AndroidLaunchMode" value="singleInstance" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="deployment-target" value="10.11" />
+</widget>

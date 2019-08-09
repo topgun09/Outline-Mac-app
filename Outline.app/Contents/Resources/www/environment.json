@@ -1,0 +1,6 @@
+{
+  "APP_VERSION": "1.3.0",
+  "APP_BUILD_NUMBER": "19",
+  "SENTRY_DSN": "https://6a1e6e7371a64db59f5ba6c34a77d78c@sentry.io/159502",
+  "SENTRY_NATIVE_DSN": "https://6a1e6e7371a64db59f5ba6c34a77d78c:568f6c78f9f94f91afba4aba05756001@sentry.io/159502"
+}
